@@ -1,0 +1,47 @@
+name: Daily News Digest
+
+on:
+  schedule:
+    # 北京时间 9:00 = UTC 1:00
+    - cron: '0 1 * * *'
+  # 允许手动触发（用于测试）
+  workflow_dispatch:
+  # 每次代码推送时也可触发（可选）
+  push:
+    branches:
+      - main
+
+jobs:
+  run-news-bot:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # 2. 设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      # 4. 运行新闻机器人
+      - name: Run news bot
+        env:
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          WXPUSHER_APP_TOKEN: ${{ secrets.WXPUSHER_APP_TOKEN }}
+          WXPUSHER_UID: ${{ secrets.WXPUSHER_UID }}
+        run: python main.py
+      
+      # 5. 记录运行日志
+      - name: Log completion
+        if: always()
+        run: |
+          echo "News bot execution completed at $(date)"
