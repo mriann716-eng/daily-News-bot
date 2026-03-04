@@ -35,7 +35,7 @@ jobs:
       - name: Run news bot
         env:
           SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           WXPUSHER_APP_TOKEN: ${{ secrets.WXPUSHER_APP_TOKEN }}
           WXPUSHER_UID: ${{ secrets.WXPUSHER_UID }}
         run: python main.py
